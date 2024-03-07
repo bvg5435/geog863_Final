@@ -3,7 +3,7 @@ require(["esri/Map",
         "esri/layers/FeatureLayer",
         "esri/renderers/UniqueValueRenderer",
         "esri/widgets/Legend",
-        "esri/widgets/Editor"],
+        "esri/widgets/Editor",],
     (Map, MapView, FeatureLayer, UniqueValueRenderer, Legend, Editor) => {
         const map = new Map({
             basemap: "hybrid"
@@ -21,6 +21,7 @@ require(["esri/Map",
             center: [Long, Lat]
         });
 
+        // Function used to create  control point symbology.
         function createValueInfos(varLabel, varValue, symbolColor, symbolSize, symbolType) {
             return {
                 label: varLabel,
@@ -47,7 +48,6 @@ require(["esri/Map",
             ]
         });
 
-
         // Pop-up Creation
         const template = {
             title: "{PID}",
@@ -64,8 +64,24 @@ require(["esri/Map",
             popupTemplate: template
         });
 
-        map.add(featureLayer);
 
+        // Create counties layer from public web service.
+        const featureCounties = new FeatureLayer({
+            url: "https://gis.trpdmn.org/traditional/rest/services/CountiesMinnesota_Public_Viewing/FeatureServer/2",
+            renderer: {
+                type: "simple",
+                symbol: {
+                    type: "simple-fill",
+                    color: [255, 255, 255, 0.1],
+                    outline: {
+                        width: 0.25,
+                        color: [255, 255, 255, 0.5]
+                    }
+                }
+            }
+        });
+
+        map.layers.addMany([featureLayer, featureCounties]);
 
         // Create a legend for the map.
         const legend = new Legend({
