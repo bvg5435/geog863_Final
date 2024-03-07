@@ -1,7 +1,9 @@
 require(["esri/Map",
     "esri/views/MapView",
     "esri/layers/FeatureLayer",
-    "esri/renderers/UniqueValueRenderer",], (Map, MapView, FeatureLayer, UniqueValueRenderer) => {
+    "esri/renderers/UniqueValueRenderer",
+    "esri/widgets/Legend"],
+    (Map, MapView, FeatureLayer, UniqueValueRenderer, Legend) => {
     const map = new Map({
         basemap: "hybrid"
     });
@@ -46,10 +48,10 @@ require(["esri/Map",
 
 
     // Pop-up Creation
-    //const template = {
-        //title: "Site: {CAMPING_UNIT_NAME}",
-        //content: "Site Length: {SITE_PAD_LENGTH_FT}<br />Campsite Type: {CAMPSITE_TYPE_NAME}<br />Tent Pad Size (ft): {TENT_PAD_DIMENSIONS_FT_X_FT}",
-    //};
+    const template = {
+        title: "{PID}",
+        content: "Data Sheet: {DATA_SRCE}<br />Last Reviewed: {LAST_RECV}<br />Last Condition: {LAST_COND}<br />Marker: {MARKER}",
+    };
 
     // Create the feature layer from an item on AGOL.
     const featureLayer = new FeatureLayer({
@@ -57,9 +59,22 @@ require(["esri/Map",
             id:"ed525488e1734683a53144bf4cf95c3d"
         },
         renderer: ngsRenderer,
-        outFields: ["*"],
-        //popupTemplate: template
+        outFields: ["PID", "DATA_SRCE", "LAST_RECV", "LAST_COND", "MARKER"],
+        popupTemplate: template
     });
 
     map.add(featureLayer);
+
+
+    // Create a legend for the map.
+    const legend = new Legend({
+        view: view,
+        layerInfos: [{
+            layer: featureLayer,
+            title: "Control Point Status"
+        }]
+    });
+    // Add the legend.
+    view.ui.add(legend, "top-left");
+
 });
