@@ -2,8 +2,9 @@ require(["esri/Map",
         "esri/views/MapView",
         "esri/layers/FeatureLayer",
         "esri/renderers/UniqueValueRenderer",
-        "esri/widgets/Legend"],
-    (Map, MapView, FeatureLayer, UniqueValueRenderer, Legend) => {
+        "esri/widgets/Legend",
+        "esri/widgets/Editor"],
+    (Map, MapView, FeatureLayer, UniqueValueRenderer, Legend, Editor) => {
         const map = new Map({
             basemap: "hybrid"
         });
@@ -74,7 +75,33 @@ require(["esri/Map",
                 title: "Control Point Status"
             }]
         });
+
         // Add the legend.
         view.ui.add(legend, "top-left");
+
+        // Editor Widget
+        const editor = new Editor({
+            view: view,
+            layerInfos: [{
+                layer: featureLayer,
+                formTemplate: {
+                    elements: [{
+                        type: "field",
+                        fieldName: "FieldLocated",
+                        label: "Field Located Status"
+                    }
+                    ]
+                },
+                enabled: true,
+                addEnabled: false,
+                updateEnabled: true,
+                deleteEnabled: false,
+                attributeUpdatesEnabled: true
+
+            }]
+        });
+
+        // Add the widget to the view
+        view.ui.add(editor, "top-right");
 
     });
