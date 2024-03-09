@@ -4,8 +4,9 @@ require(["esri/Map",
         "esri/renderers/UniqueValueRenderer",
         "esri/widgets/Legend",
         "esri/widgets/Editor",
-        "esri/layers/support/LabelClass"],
-    (Map, MapView, FeatureLayer, UniqueValueRenderer, Legend, Editor, LabelClass) => {
+        "esri/layers/support/LabelClass",
+        "esri/widgets/Search"],
+    (Map, MapView, FeatureLayer, UniqueValueRenderer, Legend, Editor, LabelClass, Search) => {
         const map = new Map({
             basemap: "hybrid"
         });
@@ -49,6 +50,37 @@ require(["esri/Map",
             ]
         });
 
+        // Create 3 label classes for control points based on the status.
+        function createLabel(colorTxt, colorHalo, expression, whereClause) {
+            return {
+                symbol: {
+                    type: "text",
+                    color: colorTxt,
+                    haloColor: colorHalo,
+                    haloSize: 1,
+                    font: {
+                        family: "Ubuntu Mono",
+                        size: 12
+                    }
+                },
+                labelPlacement: "above-center",
+                labelExpressionInfo: {
+                    expression: expression
+                },
+                maxScale: 0,
+                minScale: 1500000,
+                where: whereClause
+            }
+        }
+
+        const labelInfoNotVisited = createLabel("blue", "white", "$feature.PID", "FieldLocated = 'Not Visited'");
+        const labelInfoLocated = createLabel("white", "black", "$feature.PID", "FieldLocated = 'Visited - Located'");
+        const labelInfoNotLocated = createLabel("red", "white", "$feature.PID", "FieldLocated = 'Not Visited'");
+
+        const controlLabel = new LabelClass({
+            labelInfoNotVisited
+        });
+
         // Pop-up Creation for control points.
         const template = {
             title: "{PID}",
@@ -60,9 +92,31 @@ require(["esri/Map",
             portalItem: {
                 id: "ed525488e1734683a53144bf4cf95c3d"
             },
+            labelingInfo: [controlLabel],
             renderer: ngsRenderer,
-            outFields: ["PID", "DATA_SRCE", "LAST_RECV", "LAST_COND", "MARKER"],
+            outFields: ["PID", "DATA_SRCE", "LAST_RECV", "LAST_COND", "MARKER", "FieldLocated"],
             popupTemplate: template
+        });
+
+        // Create search function based on control point layer.
+        const searchWidget = new Search({
+            view: view,
+            allPlaceholder: "Search for a control Point",
+            sources: [{
+                layer: featureLayer,
+                exactMatch: false,
+                searchFields: ["PID"],
+                displayField: "PID",
+                maxSuggestions: 10,
+                maxResults: 10,
+                placeholder: "Search by ID",
+                zoomScale: 10000
+            }],
+            includeDefaultSources: false
+        });
+
+        view.ui.add(searchWidget, {
+            position: "bottom-right"
         });
 
         //County labels
