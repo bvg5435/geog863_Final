@@ -38,7 +38,7 @@ require(["esri/Map",
         }
 
         const typeNotVisited = createValueInfos("Not Visited", "Not Visited", "blue", 4, "square");
-        const typeLocated = createValueInfos("Visited - Located", "Visited - Located", "white", 4, "square");
+        const typeLocated = createValueInfos("Visited - Located", "Visited - Located", "yellow", 4, "square");
         const typeNotLocated = createValueInfos("Visited - Not Located", "Visited - Not Located", "red", 4, "square");
 
         const ngsRenderer = new UniqueValueRenderer({
@@ -59,8 +59,8 @@ require(["esri/Map",
                     haloColor: colorHalo,
                     haloSize: 1,
                     font: {
-                        family: "Ubuntu Mono",
-                        size: 12
+                        family: "Oswald",
+                        size: 10
                     }
                 },
                 labelPlacement: "above-center",
@@ -68,18 +68,15 @@ require(["esri/Map",
                     expression: expression
                 },
                 maxScale: 0,
-                minScale: 1500000,
+                minScale: 120000,
                 where: whereClause
             }
         }
 
         const labelInfoNotVisited = createLabel("blue", "white", "$feature.PID", "FieldLocated = 'Not Visited'");
-        const labelInfoLocated = createLabel("white", "black", "$feature.PID", "FieldLocated = 'Visited - Located'");
-        const labelInfoNotLocated = createLabel("red", "white", "$feature.PID", "FieldLocated = 'Not Visited'");
+        const labelInfoLocated = createLabel("yellow", "black", "$feature.PID", "FieldLocated = 'Visited - Located'");
+        const labelInfoNotLocated = createLabel("red", "white", "$feature.PID", "FieldLocated = 'Visited - Not Located'");
 
-        const controlLabel = new LabelClass({
-            labelInfoNotVisited
-        });
 
         // Pop-up Creation for control points.
         const template = {
@@ -92,7 +89,7 @@ require(["esri/Map",
             portalItem: {
                 id: "ed525488e1734683a53144bf4cf95c3d"
             },
-            labelingInfo: [controlLabel],
+            labelingInfo: [labelInfoNotVisited, labelInfoLocated, labelInfoNotLocated],
             renderer: ngsRenderer,
             outFields: ["PID", "DATA_SRCE", "LAST_RECV", "LAST_COND", "MARKER", "FieldLocated"],
             popupTemplate: template
@@ -107,9 +104,9 @@ require(["esri/Map",
                 exactMatch: false,
                 searchFields: ["PID"],
                 displayField: "PID",
-                maxSuggestions: 10,
-                maxResults: 10,
-                placeholder: "Search by ID",
+                maxSuggestions: 15,
+                maxResults: 15,
+                placeholder: "Search by PID",
                 zoomScale: 10000
             }],
             includeDefaultSources: false
@@ -128,7 +125,7 @@ require(["esri/Map",
                 haloSize: 1,
                 font: {
                     family: "Ubuntu Mono",
-                    size: 12
+                    size: 14
                 }
             },
             labelPlacement: "always-horizontal",
