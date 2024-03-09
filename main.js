@@ -3,8 +3,9 @@ require(["esri/Map",
         "esri/layers/FeatureLayer",
         "esri/renderers/UniqueValueRenderer",
         "esri/widgets/Legend",
-        "esri/widgets/Editor",],
-    (Map, MapView, FeatureLayer, UniqueValueRenderer, Legend, Editor) => {
+        "esri/widgets/Editor",
+        "esri/layers/support/LabelClass"],
+    (Map, MapView, FeatureLayer, UniqueValueRenderer, Legend, Editor, LabelClass) => {
         const map = new Map({
             basemap: "hybrid"
         });
@@ -36,7 +37,7 @@ require(["esri/Map",
         }
 
         const typeNotVisited = createValueInfos("Not Visited", "Not Visited", "blue", 4, "square");
-        const typeLocated = createValueInfos("Visited - Located", "Visited - Located", "green", 4, "square");
+        const typeLocated = createValueInfos("Visited - Located", "Visited - Located", "white", 4, "square");
         const typeNotLocated = createValueInfos("Visited - Not Located", "Visited - Not Located", "red", 4, "square");
 
         const ngsRenderer = new UniqueValueRenderer({
@@ -48,7 +49,7 @@ require(["esri/Map",
             ]
         });
 
-        // Pop-up Creation
+        // Pop-up Creation for control points.
         const template = {
             title: "{PID}",
             content: "Data Sheet: {DATA_SRCE}<br />Last Reviewed: {LAST_RECV}<br />Last Condition: {LAST_COND}<br />Marker: {MARKER}",
@@ -64,10 +65,30 @@ require(["esri/Map",
             popupTemplate: template
         });
 
+        //County labels
+        const labelCounty = new LabelClass({
+            symbol: {
+                type: "text",
+                color: "black",
+                haloColor: "white",
+                haloSize: 1,
+                font: {
+                    family: "Ubuntu Mono",
+                    size: 12
+                }
+            },
+            labelPlacement: "always-horizontal",
+            labelExpressionInfo: {
+                expression: "$feature.COUNTY_NAME"
+            },
+            maxScale: 0,
+            minScale: 1500000
+        });
 
         // Create counties layer from public web service.
         const featureCounties = new FeatureLayer({
             url: "https://gis.trpdmn.org/traditional/rest/services/CountiesMinnesota_Public_Viewing/FeatureServer/2",
+            labelingInfo: [labelCounty],
             renderer: {
                 type: "simple",
                 symbol: {
