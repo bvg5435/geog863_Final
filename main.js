@@ -50,7 +50,7 @@ require(["esri/Map",
             ]
         });
 
-        // Create 3 label classes for control points based on the status.
+        // Create three label classes for control points based on the status.
         function createLabel(colorTxt, colorHalo, expression, whereClause) {
             return {
                 symbol: {
