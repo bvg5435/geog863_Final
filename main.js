@@ -19,7 +19,7 @@ require(["esri/Map",
         const view = new MapView({
             container: "viewDiv",
             map: map,
-            zoom: 8,
+            zoom: 7,
             center: [Long, Lat]
         });
 
