@@ -8,7 +8,9 @@ body,
 }
 
 .reflection {
-    padding: 8pt;
     font-weight: bold;
+    font-size: 16pt;
+    padding-left: 10pt;
+    padding-top: 1pt;
 }
 
