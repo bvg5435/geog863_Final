@@ -7,3 +7,8 @@ body,
     width: 100%;
 }
 
+.reflection {
+    padding: 8pt;
+    font-weight: bold;
+}
+
