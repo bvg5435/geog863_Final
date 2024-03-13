@@ -113,7 +113,7 @@ require(["esri/Map",
         });
 
         view.ui.add(searchWidget, {
-            position: "bottom-right"
+            position: "top-left"
         });
 
         //County labels

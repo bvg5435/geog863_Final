@@ -7,10 +7,11 @@ body,
     width: 100%;
 }
 
-.reflection {
+.title {
+    height: 5%;
     font-weight: bold;
-    font-size: 16pt;
+    font-size: 15pt;
     padding-left: 10pt;
-    padding-top: 1pt;
+    padding-top: 1px;
 }
 
